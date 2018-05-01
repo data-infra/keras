@@ -59,13 +59,14 @@ class ImageLoader(Loader):
 # 标签数据加载器
 class LabelLoader(Loader):
     # 加载数据文件，获得全部样本的标签向量
-    def load(self):
+    def load(self,one_hot):
         content = self.get_file_content()   # 获取文件字节数组
         labels = []
         for index in range(self.count):  #遍历每一个样本
             onelabel = content[index + 8]   # 文件头有8个字节
-            onelabelvec = self.norm(onelabel) #one-hot编码
-            labels.append(onelabelvec)
+            if one_hot:
+                onelabel = self.norm(onelabel) #one-hot编码
+            labels.append(onelabel)
         return labels
 
     # 内部函数，one-hot编码。将一个值转换为10维标签向量
@@ -81,16 +82,16 @@ class LabelLoader(Loader):
         return label_vec
 
 # 获得训练数据集。onerow表示是否将每张图片转化为行向量
-def get_training_data_set(num,onerow=False):
+def get_training_data_set(num,onerow=False,one_hot=True):
     image_loader = ImageLoader('train-images.idx3-ubyte', num)  # 参数为文件路径和加载的样本数量
     label_loader = LabelLoader('train-labels.idx1-ubyte', num)  # 参数为文件路径和加载的样本数量
-    return image_loader.load(onerow), label_loader.load()
+    return image_loader.load(onerow), label_loader.load(one_hot)
 
 # 获得测试数据集。onerow表示是否将每张图片转化为行向量
-def get_test_data_set(num,onerow=False):
+def get_test_data_set(num,onerow=False,one_hot=True):
     image_loader = ImageLoader('t10k-images.idx3-ubyte', num)  # 参数为文件路径和加载的样本数量
     label_loader = LabelLoader('t10k-labels.idx1-ubyte', num)  # 参数为文件路径和加载的样本数量
-    return image_loader.load(onerow), label_loader.load()
+    return image_loader.load(onerow), label_loader.load(one_hot)
 
 
 # 将一行784的行向量，打印成图形的样式
