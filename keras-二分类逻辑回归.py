@@ -34,7 +34,7 @@ print('Weights=', W, '\nbiases=', b)
 Y_pred = model.predict(X)
 Y_pred = (Y_pred*2).astype('int')  # 将概率转化为类标号，概率在0-0.5时，转为0，概率在0.5-1时转为1
 # 绘制散点图 参数：x横轴 y纵轴
-plt.subplot(2,1,1).scatter(X[:,0], X[:,1], c=Y_pred)
+plt.subplot(2,1,1).scatter(X[:,0], X[:,1], c=Y_pred[:,0])
 plt.subplot(2,1,2).scatter(X[:,0], X[:,1], c=y)
 plt.show()
 
